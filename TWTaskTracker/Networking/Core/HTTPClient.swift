@@ -46,12 +46,14 @@ extension HTTPHeaders: Equatable {
 }
 
 extension HTTPHeaders {
-    static func initWithJsonHeaders(withAuthToken token: String? = nil) -> HTTPHeaders {
+    static func initWithJsonHeaders(withAuthToken credentials: String? = nil) -> HTTPHeaders {
         var httpHeaders = ["Content-Type": "application/json",
                            "Accept": "application/json"]
-        if let token = token {
-            httpHeaders["Authorization"] = token
+        if let credentials = credentials {
+            let authData = (credentials).data(using: .utf8)!.base64EncodedString()
+            httpHeaders["Authorization"] = "Basic \(authData)"
         }
+        
         return HTTPHeaders(headers: httpHeaders)
     }
     
